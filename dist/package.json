@@ -1,0 +1,10 @@
+{
+ "name": "lazy-barre-instructor",
+ "version": "1.0.0",
+ "description": "automatically find songs for your barre class",
+ "author": "mjknowles",
+ "private": true,
+ "scripts": {
+   "postinstall": "npm install express"
+ }
+}
