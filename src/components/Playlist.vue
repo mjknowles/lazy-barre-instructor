@@ -1,7 +1,7 @@
 <template>
   <div class="playlist">
     <h1>Hello, {{ msg }}!</h1>
-
+    <button v-on:click="getSongs">Refresh</button>
     <ul id="example-1">
         <li v-for="track in tracks">
         {{ track.song }} - {{ track.artist }}
@@ -30,7 +30,7 @@ export default {
             'Authorization': 'Bearer ' + accessToken
           },
           params: {
-            'seed_genres': 'dance',
+            'seed_genres': 'work-out',
             'min_tempo': 120,
             'max_tempo': 125
           }
@@ -71,5 +71,9 @@ export default {
 <style scoped>
 h1, h2 {
   font-weight: normal;
+}
+ul
+{
+  list-style-type: none;
 }
 </style>
