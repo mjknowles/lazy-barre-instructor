@@ -1,7 +1,7 @@
 <template>
   <div class="playlist">
     <h1>Hello, {{ msg }}!</h1>
-    <h2>Name your playlist:</h2> <input type="text">
+    <h2>Name your playlist:</h2> <input v-model="playlistName" placeholder="enter playlist name"><button v-on:click="createPlaylist">Create</button>
     <button v-on:click="getSongs">Refresh</button>
     <ul id="example-1">
         <li v-for="track in tracks">
@@ -17,7 +17,8 @@ export default {
   data () {
     return {
       msg: 'Welcome to your playlist',
-      tracks: []
+      tracks: [],
+      playlistName: ''
     }
   },
   accessToken: '',
@@ -63,25 +64,15 @@ export default {
     },
 
     createPlaylist () {
-      var vm = this
-      this.$http.get('https://api.spotify.com/v1/users/{user_id}/playlists',
+      this.$http.post('https://api.spotify.com/v1/users/' + this.userId + '/playlists',
+        { name: this.playlistName },
         {
           headers: {
-            'Authorization': 'Bearer ' + this.accessToken
-          },
-          params: {
-            'seed_genres': 'work-out',
-            'min_tempo': 120,
-            'max_tempo': 125
+            'Authorization': 'Bearer ' + this.accessToken,
+            'content-type': 'application/json'
           }
         }).then((response) => {
-          var tracks = response.body.tracks
-          vm.tracks = tracks.map(function (t) {
-            return {
-              song: t.name,
-              artist: t.artists[0].name
-            }
-          })
+          console.log('playlist succesfully created')
         })
     },
 
@@ -100,6 +91,7 @@ export default {
   created () {
     var params = this.getUrlParameters(location)
     this.accessToken = params['access_token']
+    this.getUserId()
     this.getSongs()
   }
 }
