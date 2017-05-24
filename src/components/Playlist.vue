@@ -1,6 +1,7 @@
 <template>
   <div class="playlist">
     <h1>Hello, {{ msg }}!</h1>
+    <h2>Name your playlist:</h2> <input type="text">
     <button v-on:click="getSongs">Refresh</button>
     <ul id="example-1">
         <li v-for="track in tracks">
@@ -19,15 +20,15 @@ export default {
       tracks: []
     }
   },
+  accessToken: '',
+  userId: '',
   methods: {
     getSongs () {
       var vm = this
-      var params = this.getUrlParameters(location)
-      var accessToken = params['access_token']
       this.$http.get('https://api.spotify.com/v1/recommendations',
         {
           headers: {
-            'Authorization': 'Bearer ' + accessToken
+            'Authorization': 'Bearer ' + this.accessToken
           },
           params: {
             'seed_genres': 'work-out',
@@ -59,9 +60,46 @@ export default {
         hashParams[keyValPair[0]] = keyValPair[1]
       }
       return hashParams
+    },
+
+    createPlaylist () {
+      var vm = this
+      this.$http.get('https://api.spotify.com/v1/users/{user_id}/playlists',
+        {
+          headers: {
+            'Authorization': 'Bearer ' + this.accessToken
+          },
+          params: {
+            'seed_genres': 'work-out',
+            'min_tempo': 120,
+            'max_tempo': 125
+          }
+        }).then((response) => {
+          var tracks = response.body.tracks
+          vm.tracks = tracks.map(function (t) {
+            return {
+              song: t.name,
+              artist: t.artists[0].name
+            }
+          })
+        })
+    },
+
+    getUserId () {
+      var vm = this
+      this.$http.get('https://api.spotify.com/v1/me',
+        {
+          headers: {
+            'Authorization': 'Bearer ' + this.accessToken
+          }
+        }).then((response) => {
+          vm.userId = response.body.id
+        })
     }
   },
   created () {
+    var params = this.getUrlParameters(location)
+    this.accessToken = params['access_token']
     this.getSongs()
   }
 }
