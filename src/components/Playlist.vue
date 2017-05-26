@@ -1,8 +1,9 @@
 <template>
   <div class="playlist">
     <h1>Hello, {{ msg }}!</h1>
-    <h2>Name your playlist:</h2> <input v-model="playlistName" placeholder="enter playlist name"><button v-on:click="createPlaylist">Create</button>
-    <button v-on:click="getSongs">Refresh</button>
+    <h2>Name your playlist:</h2> <input v-model="playlistName" placeholder="enter playlist name"><button v-on:click="setPlaylist">Set Playlist</button>
+    <multiselect v-model="selected" :options="genres"></multiselect>
+    <button v-on:click="getSongs">Add (more) songs</button>
     <ul id="example-1">
         <li v-for="track in tracks">
         {{ track.song }} - {{ track.artist }}
@@ -12,17 +13,22 @@
 </template>
 
 <script>
+import Multiselect from 'vue-multiselect'
 export default {
   name: 'playlist',
+  components: { Multiselect },
   data () {
     return {
       msg: 'Welcome to your playlist',
       tracks: [],
-      playlistName: ''
+      playlistName: '',
+      genres: []
     }
   },
   accessToken: '',
   userId: '',
+  playlistId: '',
+  allPlaylists: [],
   methods: {
     getSongs () {
       var vm = this
@@ -41,9 +47,11 @@ export default {
           vm.tracks = tracks.map(function (t) {
             return {
               song: t.name,
-              artist: t.artists[0].name
+              artist: t.artists[0].name,
+              uri: t.uri
             }
           })
+          vm.saveTracksToPlaylist(this.playlistId)
         })
     },
 
@@ -72,7 +80,35 @@ export default {
             'content-type': 'application/json'
           }
         }).then((response) => {
-          console.log('playlist succesfully created')
+          this.playlistId = response.body.id
+          this.getSongs()
+        })
+    },
+
+    setPlaylist () {
+      var vm = this
+      this.$http.get('https://api.spotify.com/v1/me/playlists',
+        {
+          headers: {
+            'Authorization': 'Bearer ' + this.accessToken
+          },
+          params: {
+            'limit': 50
+          }
+        }).then((response) => {
+          var playlists = response.body.items
+          vm.allPlaylists = playlists.map(function (p) {
+            return {
+              id: p.id,
+              name: p.name
+            }
+          })
+          var existing = this.allPlaylists.filter(function (p) { return p.name === vm.playlistName })
+          if (existing && existing.length !== 0) {
+            this.playlistId = existing[0].id
+          } else {
+            this.createPlaylist()
+          }
         })
     },
 
@@ -86,18 +122,44 @@ export default {
         }).then((response) => {
           vm.userId = response.body.id
         })
+    },
+
+    saveTracksToPlaylist (playlistId) {
+      this.$http.post('https://api.spotify.com/v1/users/' + this.userId + '/playlists/' + this.playlistId + '/tracks',
+      { uris: this.tracks.map(function (t) { return t.uri }) },
+        {
+          headers: {
+            'Authorization': 'Bearer ' + this.accessToken,
+            'content-type': 'application/json'
+          }
+        }).then((response) => {
+          console.log('Tracks saved')
+        })
+    },
+
+    getGenres () {
+      var vm = this
+      this.$http.get('https://api.spotify.com/v1/recommendations/available-genre-seeds',
+        {
+          headers: {
+            'Authorization': 'Bearer ' + this.accessToken
+          }
+        }).then((response) => {
+          vm.genres = response.body.genres
+        })
     }
   },
   created () {
     var params = this.getUrlParameters(location)
     this.accessToken = params['access_token']
     this.getUserId()
-    this.getSongs()
+    this.getGenres()
   }
 }
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
+<style src="vue-multiselect/dist/vue-multiselect.min.css"></style>
 <style scoped>
 h1, h2 {
   font-weight: normal;
@@ -107,3 +169,4 @@ ul
   list-style-type: none;
 }
 </style>
+
