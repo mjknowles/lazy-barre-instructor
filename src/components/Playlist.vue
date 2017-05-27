@@ -1,9 +1,18 @@
 <template>
   <div class="playlist">
     <h1>Hello, {{ msg }}!</h1>
-    <h2>Name your playlist:</h2> <input v-model="playlistName" placeholder="enter playlist name"><button v-on:click="setPlaylist">Set Playlist</button>
-    <multiselect v-model="selected" :options="genres"></multiselect>
-    <button v-on:click="getSongs">Add (more) songs</button>
+    <h2>Name your playlist:</h2> <input v-model="playlistName" placeholder="enter playlist name" />
+<!--Minimum popularity: <input v-model="min_popularity" />
+    Maximum popularity: <input v-model="max_popularity" />
+    Minimum happiness: <input v-model="min_happiness" />
+    Maximum happiness: <input v-model="max_happiness" />-->
+    <multiselect 
+      v-model="selectedGenres" 
+      :options="genres"
+      :multiple="true">
+    </multiselect>
+    <h2>Enter track ids (comma separated):</h2> <input v-model="selectedTracks" />  
+    <button v-on:click="setPlaylist">Add (more) songs</button>
     <ul id="example-1">
         <li v-for="track in tracks">
         {{ track.song }} - {{ track.artist }}
@@ -22,7 +31,13 @@ export default {
       msg: 'Welcome to your playlist',
       tracks: [],
       playlistName: '',
-      genres: []
+      genres: [],
+      selectedGenres: [ 'work-out', 'dance', 'pop' ],
+      selectedTracks: '1TV1Hc5kwk44GPeZEZzydc,77vWEdRG281Z5QJD6I0x7b',
+      minPopularity: 0,
+      maxPopularity: 100,
+      minHappiness: 0,
+      maxHappiness: 1
     }
   },
   accessToken: '',
@@ -38,9 +53,11 @@ export default {
             'Authorization': 'Bearer ' + this.accessToken
           },
           params: {
-            'seed_genres': 'work-out',
+            'seed_tracks': this.selectedTracks,
+            'seed_genres': this.selectedGenres.join(),
             'min_tempo': 120,
-            'max_tempo': 125
+            'max_tempo': 125,
+            'limit': 100
           }
         }).then((response) => {
           var tracks = response.body.tracks
@@ -81,7 +98,6 @@ export default {
           }
         }).then((response) => {
           this.playlistId = response.body.id
-          this.getSongs()
         })
     },
 
@@ -109,6 +125,7 @@ export default {
           } else {
             this.createPlaylist()
           }
+          this.getSongs()
         })
     },
 
