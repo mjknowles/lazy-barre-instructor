@@ -6,15 +6,11 @@
     Maximum popularity: <input v-model="max_popularity" />
     Minimum happiness: <input v-model="min_happiness" />
     Maximum happiness: <input v-model="max_happiness" />-->
-    <multiselect 
-      v-model="selectedGenres" 
-      :options="genres"
-      :multiple="true">
-    </multiselect>
+    <genre-selector :accessToken="accessToken" :initialGenres="initialGenres"></genre-selector>
     <h2>Enter track ids (comma separated):</h2> <input v-model="selectedTracks" />  
     <button v-on:click="setPlaylist">Add (more) songs</button>
     <ul id="example-1">
-        <li v-for="track in tracks">
+        <li v-for="track in tracks" :key="track.id">
         {{ track.song }} - {{ track.artist }}
         </li>
     </ul>
@@ -23,16 +19,16 @@
 
 <script>
 import Multiselect from 'vue-multiselect'
+import GenreSelector from '@/components/GenreSelector'
 export default {
   name: 'playlist',
-  components: { Multiselect },
+  components: { Multiselect, GenreSelector },
   data () {
     return {
       msg: 'Welcome to your playlist',
       tracks: [],
       playlistName: '',
-      genres: [],
-      selectedGenres: [ 'work-out', 'dance', 'pop' ],
+      initialGenres: [ 'work-out', 'dance', 'pop' ],
       selectedTracks: '1TV1Hc5kwk44GPeZEZzydc,77vWEdRG281Z5QJD6I0x7b',
       minPopularity: 0,
       maxPopularity: 100,
@@ -54,7 +50,7 @@ export default {
           },
           params: {
             'seed_tracks': this.selectedTracks,
-            'seed_genres': this.selectedGenres.join(),
+            'seed_genres': this.GenreSelector.selectedGenres.join(),
             'min_tempo': 120,
             'max_tempo': 125,
             'limit': 100
@@ -152,31 +148,17 @@ export default {
         }).then((response) => {
           console.log('Tracks saved')
         })
-    },
-
-    getGenres () {
-      var vm = this
-      this.$http.get('https://api.spotify.com/v1/recommendations/available-genre-seeds',
-        {
-          headers: {
-            'Authorization': 'Bearer ' + this.accessToken
-          }
-        }).then((response) => {
-          vm.genres = response.body.genres
-        })
     }
   },
   created () {
     var params = this.getUrlParameters(location)
     this.accessToken = params['access_token']
     this.getUserId()
-    this.getGenres()
   }
 }
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
-<style src="vue-multiselect/dist/vue-multiselect.min.css"></style>
 <style scoped>
 h1, h2 {
   font-weight: normal;
