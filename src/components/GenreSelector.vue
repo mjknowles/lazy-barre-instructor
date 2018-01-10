@@ -18,6 +18,9 @@ export default {
       selectedGenres: this.initialGenres
     }
   },
+  watch: {
+    'selectedGenres': function () { this.$emit('input', this.selectedGenres) }
+  },
   methods: {
     getGenres () {
       var vm = this

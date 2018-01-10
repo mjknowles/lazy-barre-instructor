@@ -6,7 +6,7 @@
     Maximum popularity: <input v-model="max_popularity" />
     Minimum happiness: <input v-model="min_happiness" />
     Maximum happiness: <input v-model="max_happiness" />-->
-    <genre-selector :accessToken="accessToken" :initialGenres="initialGenres"></genre-selector>
+    <genre-selector :accessToken="accessToken" :initialGenres="initialGenres" v-model="selectedGenres"></genre-selector>
     <h2>Enter track ids (comma separated):</h2> <input v-model="selectedTracks" />  
     <button v-on:click="setPlaylist">Add (more) songs</button>
     <ul id="example-1">
@@ -28,6 +28,7 @@ export default {
       msg: 'Welcome to your playlist',
       tracks: [],
       playlistName: '',
+      selectedGenres: [ ],
       initialGenres: [ 'work-out', 'dance', 'pop' ],
       selectedTracks: '1TV1Hc5kwk44GPeZEZzydc,77vWEdRG281Z5QJD6I0x7b',
       minPopularity: 0,
@@ -43,18 +44,20 @@ export default {
   methods: {
     getSongs () {
       var vm = this
+      var myParams = {
+        'min_tempo': 120,
+        'max_tempo': 125,
+        'limit': 100
+      }
+      if (this.selectedGenres.length !== 0) myParams['seed_genres'] = this.selectedGenres
+      if (this.selectedTracks.length !== 0) myParams['seed_tracks'] = this.selectedTracks
+
       this.$http.get('https://api.spotify.com/v1/recommendations',
         {
           headers: {
             'Authorization': 'Bearer ' + this.accessToken
           },
-          params: {
-            'seed_tracks': this.selectedTracks,
-            'seed_genres': this.GenreSelector.selectedGenres.join(),
-            'min_tempo': 120,
-            'max_tempo': 125,
-            'limit': 100
-          }
+          params: myParams
         }).then((response) => {
           var tracks = response.body.tracks
           vm.tracks = tracks.map(function (t) {
