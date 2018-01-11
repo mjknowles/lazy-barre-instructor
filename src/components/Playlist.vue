@@ -6,7 +6,7 @@
     Maximum popularity: <input v-model="max_popularity" />
     Minimum happiness: <input v-model="min_happiness" />
     Maximum happiness: <input v-model="max_happiness" />-->
-    <genre-selector :accessToken="accessToken" :initialGenres="initialGenres" v-model="selectedGenres"></genre-selector>
+    <genre-selector :accessToken="accessToken" v-model="selectedGenres"></genre-selector>
     <h2>Enter track ids (comma separated):</h2> <input v-model="selectedTracks" />  
     <button v-on:click="setPlaylist">Add (more) songs</button>
     <ul id="example-1">
@@ -28,8 +28,7 @@ export default {
       msg: 'Welcome to your playlist',
       tracks: [],
       playlistName: '',
-      selectedGenres: [ ],
-      initialGenres: [ 'work-out', 'dance', 'pop' ],
+      selectedGenres: [ 'work-out', 'dance', 'pop' ],
       selectedTracks: '1TV1Hc5kwk44GPeZEZzydc,77vWEdRG281Z5QJD6I0x7b',
       minPopularity: 0,
       maxPopularity: 100,
@@ -49,7 +48,8 @@ export default {
         'max_tempo': 125,
         'limit': 100
       }
-      if (this.selectedGenres.length !== 0) myParams['seed_genres'] = this.selectedGenres
+
+      if (this.selectedGenres.length !== 0) myParams['seed_genres'] = this.selectedGenres.join()
       if (this.selectedTracks.length !== 0) myParams['seed_tracks'] = this.selectedTracks
 
       this.$http.get('https://api.spotify.com/v1/recommendations',

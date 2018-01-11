@@ -11,11 +11,11 @@ import Multiselect from 'vue-multiselect'
 export default {
   name: 'genre-selector',
   components: { Multiselect },
-  props: [ 'accessToken', 'initialGenres' ],
+  props: [ 'accessToken', 'value' ],
   data () {
     return {
       genres: [],
-      selectedGenres: this.initialGenres
+      selectedGenres: []
     }
   },
   watch: {
@@ -35,6 +35,7 @@ export default {
     }
   },
   created () {
+    this.selectedGenres = this.value
     this.getGenres()
   }
 }
