@@ -2,20 +2,12 @@
   <div class="playlist-builder">
     <h1>Hello, {{ msg }}!</h1>
     <playlist-selector :accessToken="accessToken" :userId="userId" v-model="playlist"></playlist-selector>
-<!--Minimum popularity: <input v-model="min_popularity" />
-    Maximum popularity: <input v-model="max_popularity" />
-    Minimum happiness: <input v-model="min_happiness" />
-    Maximum happiness: <input v-model="max_happiness" />-->
     <genre-selector :accessToken="accessToken" v-model="selectedGenres"></genre-selector>
     <bpm-selector :min="tempo.min" :max="tempo.max" v-model="tempo"></bpm-selector>
     <h2>Enter track ids (comma separated):</h2> <input v-model="selectedTracks" />  
     <b-button variant="info" v-on:click="getSongs">Get (more) songs</b-button>
     <b-button variant="success" v-on:click="saveTracksToPlaylist">Save</b-button>
-    <ul id="example-1">
-        <li v-for="track in tracks" :key="track.id">
-        <span v-html="track.player"></span>
-        </li>
-    </ul>
+    <track-list v-bind:tracks="tracks"></track-list>
   </div>
 </template>
 
@@ -24,10 +16,11 @@ import Multiselect from 'vue-multiselect'
 import GenreSelector from '@/components/GenreSelector'
 import PlaylistSelector from '@/components/PlaylistSelector'
 import BpmSelector from '@/components/BpmSelector'
+import TrackList from '@/components/TrackList'
 
 export default {
   name: 'playlist-builder',
-  components: { Multiselect, GenreSelector, PlaylistSelector, BpmSelector },
+  components: { Multiselect, GenreSelector, PlaylistSelector, BpmSelector, TrackList },
   data () {
     return {
       msg: 'Welcome to your playlist',
@@ -130,10 +123,6 @@ export default {
 <style scoped>
 h1, h2 {
   font-weight: normal;
-}
-ul
-{
-  list-style-type: none;
 }
 </style>
 
