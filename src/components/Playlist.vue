@@ -1,14 +1,15 @@
 <template>
   <div class="playlist">
     <h1>Hello, {{ msg }}!</h1>
-    <h2>Name your playlist:</h2> <input v-model="playlistName" placeholder="enter playlist name" />
+    <playlist-creator :accessToken="accessToken" :userId="userId" v-model="playlistId"></playlist-creator>
+    <playlist-selector :accessToken="accessToken"></playlist-selector>
 <!--Minimum popularity: <input v-model="min_popularity" />
     Maximum popularity: <input v-model="max_popularity" />
     Minimum happiness: <input v-model="min_happiness" />
     Maximum happiness: <input v-model="max_happiness" />-->
     <genre-selector :accessToken="accessToken" v-model="selectedGenres"></genre-selector>
     <h2>Enter track ids (comma separated):</h2> <input v-model="selectedTracks" />  
-    <button v-on:click="setPlaylist">Add (more) songs</button>
+    <button v-on:click="getSongs">Add (more) songs</button>
     <ul id="example-1">
         <li v-for="track in tracks" :key="track.id">
         {{ track.song }} - {{ track.artist }}
@@ -20,14 +21,18 @@
 <script>
 import Multiselect from 'vue-multiselect'
 import GenreSelector from '@/components/GenreSelector'
+import PlaylistCreator from '@/components/PlaylistCreator'
+import PlaylistSelector from '@/components/PlaylistSelector'
+
 export default {
   name: 'playlist',
-  components: { Multiselect, GenreSelector },
+  components: { Multiselect, GenreSelector, PlaylistCreator, PlaylistSelector },
   data () {
     return {
       msg: 'Welcome to your playlist',
       tracks: [],
-      playlistName: '',
+      userId: '',
+      playlistId: '',
       selectedGenres: [ 'work-out', 'dance', 'pop' ],
       selectedTracks: '1TV1Hc5kwk44GPeZEZzydc,77vWEdRG281Z5QJD6I0x7b',
       minPopularity: 0,
@@ -37,9 +42,6 @@ export default {
     }
   },
   accessToken: '',
-  userId: '',
-  playlistId: '',
-  allPlaylists: [],
   methods: {
     getSongs () {
       var vm = this
@@ -85,47 +87,6 @@ export default {
         hashParams[keyValPair[0]] = keyValPair[1]
       }
       return hashParams
-    },
-
-    createPlaylist () {
-      this.$http.post('https://api.spotify.com/v1/users/' + this.userId + '/playlists',
-        { name: this.playlistName },
-        {
-          headers: {
-            'Authorization': 'Bearer ' + this.accessToken,
-            'content-type': 'application/json'
-          }
-        }).then((response) => {
-          this.playlistId = response.body.id
-        })
-    },
-
-    setPlaylist () {
-      var vm = this
-      this.$http.get('https://api.spotify.com/v1/me/playlists',
-        {
-          headers: {
-            'Authorization': 'Bearer ' + this.accessToken
-          },
-          params: {
-            'limit': 50
-          }
-        }).then((response) => {
-          var playlists = response.body.items
-          vm.allPlaylists = playlists.map(function (p) {
-            return {
-              id: p.id,
-              name: p.name
-            }
-          })
-          var existing = this.allPlaylists.filter(function (p) { return p.name === vm.playlistName })
-          if (existing && existing.length !== 0) {
-            this.playlistId = existing[0].id
-          } else {
-            this.createPlaylist()
-          }
-          this.getSongs()
-        })
     },
 
     getUserId () {
