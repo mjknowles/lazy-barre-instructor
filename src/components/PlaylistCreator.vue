@@ -1,8 +1,11 @@
 <template>
-  <div>
-    <input v-model="playlistName" placeholder="enter playlist name" />
-    <button v-on:click="createPlaylist">Create</button>
-  </div>
+  <b-input-group>
+    <b-input-group-addon>Name</b-input-group-addon>
+    <b-form-input v-model="playlistName" placeholder="enter playlist name" />
+    <b-input-group-button slot="right">    
+      <b-btn v-on:click="createPlaylist" variant="info">Create</b-btn>
+    </b-input-group-button>
+  </b-input-group>
 </template>
 
 <script>
@@ -16,7 +19,7 @@ export default {
     }
   },
   watch: {
-    'playlistId': function () { this.$emit('input', this.playlistId) }
+    'playlistId': function () { this.$emit('input', { id: this.playlistId, name: this.playlistName }) }
   },
   methods: {
     createPlaylist () {

@@ -1,7 +1,7 @@
 import Vue from 'vue'
 import Router from 'vue-router'
 import Hello from '@/components/Hello'
-import Playlist from '@/components/Playlist'
+import Playlist from '@/components/PlaylistBuilder'
 
 Vue.use(Router)
 
@@ -15,7 +15,7 @@ export default new Router({
     },
     {
       path: '/playlist',
-      name: 'Playlist',
+      name: 'PlaylistBuilder',
       component: Playlist
     }
   ]
