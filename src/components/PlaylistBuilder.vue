@@ -13,7 +13,7 @@
     <b-button variant="success" v-on:click="saveTracksToPlaylist">Save</b-button>
     <ul id="example-1">
         <li v-for="track in tracks" :key="track.id">
-        {{ track.song }} - {{ track.artist }}
+        <span v-html="track.player"></span>
         </li>
     </ul>
   </div>
@@ -51,7 +51,7 @@ export default {
       var myParams = {
         'min_tempo': this.tempo.min,
         'max_tempo': this.tempo.max,
-        'limit': 100
+        'limit': 10
       }
 
       if (this.selectedGenres.length !== 0) myParams['seed_genres'] = this.selectedGenres.join()
@@ -69,7 +69,9 @@ export default {
             return {
               song: t.name,
               artist: t.artists[0].name,
-              uri: t.uri
+              uri: t.uri,
+              player: '<iframe src="https://open.spotify.com/embed?uri=' + t.uri + '"' +
+                'width="250" height="80" frameborder="0" allowtransparency="true"></iframe>"'
             }
           })
         })
