@@ -7,6 +7,7 @@
     Minimum happiness: <input v-model="min_happiness" />
     Maximum happiness: <input v-model="max_happiness" />-->
     <genre-selector :accessToken="accessToken" v-model="selectedGenres"></genre-selector>
+    <bpm-selector :min="tempo.min" :max="tempo.max" v-model="tempo"></bpm-selector>
     <h2>Enter track ids (comma separated):</h2> <input v-model="selectedTracks" />  
     <button v-on:click="getSongs">Add (more) songs</button>
     <ul id="example-1">
@@ -21,10 +22,11 @@
 import Multiselect from 'vue-multiselect'
 import GenreSelector from '@/components/GenreSelector'
 import PlaylistSelector from '@/components/PlaylistSelector'
+import BpmSelector from '@/components/BpmSelector'
 
 export default {
   name: 'playlist-builder',
-  components: { Multiselect, GenreSelector, PlaylistSelector },
+  components: { Multiselect, GenreSelector, PlaylistSelector, BpmSelector },
   data () {
     return {
       msg: 'Welcome to your playlist',
@@ -36,7 +38,8 @@ export default {
       minPopularity: 0,
       maxPopularity: 100,
       minHappiness: 0,
-      maxHappiness: 1
+      maxHappiness: 1,
+      tempo: { min: 0, max: 1000 }
     }
   },
   accessToken: '',

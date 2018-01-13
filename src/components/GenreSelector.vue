@@ -1,9 +1,11 @@
 <template>
-    <multiselect 
-      v-model="selectedGenres" 
-      :options="genres"
-      :multiple="true">
-    </multiselect>
+  <b-container>
+      <multiselect 
+        v-model="selectedGenres" 
+        :options="genres"
+        :multiple="true">
+      </multiselect>
+  </b-container>
 </template>
 
 <script>
