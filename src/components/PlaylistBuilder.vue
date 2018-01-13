@@ -9,7 +9,8 @@
     <genre-selector :accessToken="accessToken" v-model="selectedGenres"></genre-selector>
     <bpm-selector :min="tempo.min" :max="tempo.max" v-model="tempo"></bpm-selector>
     <h2>Enter track ids (comma separated):</h2> <input v-model="selectedTracks" />  
-    <button v-on:click="getSongs">Add (more) songs</button>
+    <b-button variant="info" v-on:click="getSongs">Get (more) songs</b-button>
+    <b-button variant="success" v-on:click="saveTracksToPlaylist">Save</b-button>
     <ul id="example-1">
         <li v-for="track in tracks" :key="track.id">
         {{ track.song }} - {{ track.artist }}
@@ -30,6 +31,7 @@ export default {
   data () {
     return {
       msg: 'Welcome to your playlist',
+      accessToken: '',
       tracks: [],
       userId: '',
       playlist: {},
@@ -39,16 +41,16 @@ export default {
       maxPopularity: 100,
       minHappiness: 0,
       maxHappiness: 1,
-      tempo: { min: 0, max: 1000 }
+      tempo: { min: 120, max: 125 }
     }
   },
-  accessToken: '',
+
   methods: {
     getSongs () {
       var vm = this
       var myParams = {
-        'min_tempo': 120,
-        'max_tempo': 125,
+        'min_tempo': this.tempo.min,
+        'max_tempo': this.tempo.max,
         'limit': 100
       }
 
@@ -70,7 +72,6 @@ export default {
               uri: t.uri
             }
           })
-          vm.saveTracksToPlaylist(this.playlist.id)
         })
     },
 
@@ -102,7 +103,7 @@ export default {
         })
     },
 
-    saveTracksToPlaylist (playlistId) {
+    saveTracksToPlaylist () {
       this.$http.post('https://api.spotify.com/v1/users/' + this.userId + '/playlists/' + this.playlist.id + '/tracks',
       { uris: this.tracks.map(function (t) { return t.uri }) },
         {
