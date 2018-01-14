@@ -115,6 +115,36 @@ export default {
     var params = this.getUrlParameters(location)
     this.accessToken = params['access_token']
     this.getUserId()
+
+    /*eslint-disable */
+    var script1 = document.createElement('script')
+    script1.type = 'text/javascript'
+    script1.src = 'https://sdk.scdn.co/spotify-player.js'
+    document.body.appendChild(script1);
+    var script2 = document.createElement('script')
+    script2.type = 'text/javascript'
+    script2.textContent = `
+      window.onSpotifyWebPlaybackSDKReady = () => {
+        const player = new Spotify.Player({
+          name: 'Web Playback SDK Quick Start Player',
+          getOAuthToken: cb => { cb('` + this.accessToken + `') }
+        })
+
+        player.on('initialization_error', e => { console.error(e) })
+        player.on('authentication_error', e => { console.error(e) })
+        player.on('account_error', e => { console.error(e) })
+        player.on('playback_error', e => { console.error(e) })
+
+        player.on('player_state_changed', state => { console.log(state) })
+
+        player.on('ready', data => {
+          let { device_id } = data
+          console.log('Ready with Device ID', device_id)
+        })
+
+        player.connect()
+      }`
+      document.body.appendChild(script2);
   }
 }
 </script>

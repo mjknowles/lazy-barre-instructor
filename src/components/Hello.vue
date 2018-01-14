@@ -29,7 +29,8 @@ export default {
     }
   },
   created () {
-    window.location.replace('https://accounts.spotify.com/authorize?client_id=***REMOVED***&redirect_uri=' + encodeURIComponent(window.location.href) + 'playlist&response_type=token&scope=playlist-modify-public%20playlist-read-private')
+    window.location.replace('https://accounts.spotify.com/authorize?client_id=***REMOVED***&redirect_uri=' + encodeURIComponent(window.location.href) +
+    'playlist&response_type=token&scope=playlist-modify-public%20playlist-read-private%20streaming%20user-read-birthdate%20user-read-email%20user-read-private')
   }
 }
 </script>
