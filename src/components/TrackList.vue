@@ -1,21 +1,17 @@
 <template>
-  <b-container>
-    <ul>
-        <li v-for="track in tracks" :key="track.id">
-          <span v-html="track.widgetPlayer"></span>
-        </li>
-    </ul>
-  </b-container>
+  <b-table show-empty hover :items="tracks" :fields="fields"></b-table>
 </template>
 
 <script>
-export default {
-  name: 'track-list',
-  props: [ 'tracks' ],
-  watch: {
-    'tracks': function () { this.$emit('input', this.tracks) }
+  export default {
+    name: 'track-list',
+    props: [ 'tracks' ],
+    data () {
+      return {
+        fields: [ 'song', 'artist' ]
+      }
+    }
   }
-}
 </script>
 
 <style scoped>
