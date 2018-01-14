@@ -1,5 +1,5 @@
 <template>
-  <b-table show-empty hover :items="tracks" :fields="fields"></b-table>
+  <b-table show-empty hover :items="localTracks" :fields="fields" @row-clicked="trackSelected"></b-table>
 </template>
 
 <script>
@@ -8,15 +8,26 @@
     props: [ 'tracks' ],
     data () {
       return {
-        fields: [ 'song', 'artist' ]
+        localTracks: [],
+        fields: [ 'song', 'artist' ],
+        index: -1,
+        selectedTrack: {}
+      }
+    },
+    watch: {
+      'tracks': function () { this.localTracks = this.tracks },
+      'index': function () {
+        this.selectedTrack = this.tracks[this.index]
+        this.$emit('input', this.selectedTrack)
+      }
+    },
+    methods: {
+      trackSelected (item, index, event) {
+        if (this.index !== -1) this.localTracks[this.index]._rowVariant = ''
+        this.index = index
+        this.localTracks[index]._rowVariant = 'info'
+        this.$forceUpdate()
       }
     }
   }
 </script>
-
-<style scoped>
-ul
-{
-  list-style-type: none;
-}
-</style>

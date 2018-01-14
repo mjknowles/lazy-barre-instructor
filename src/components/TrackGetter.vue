@@ -36,6 +36,7 @@ export default {
           var tracks = response.body.tracks
           vm.tracks = tracks.map(function (t) {
             return {
+              id: t.id,
               song: t.name,
               artist: t.artists[0].name,
               uri: t.uri,

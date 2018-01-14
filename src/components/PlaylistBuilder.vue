@@ -6,8 +6,9 @@
     <bpm-selector :min="recParams.tempo.min" :max="recParams.tempo.max" v-model="recParams.tempo"></bpm-selector>
     <h2>Enter track ids (comma separated):</h2> <input v-model="recParams.selectedTracks" />
     <track-getter :params="recParams" :accessToken="accessToken" v-model="tracks"></track-getter> 
-    <track-saver :tracks="tracks" :accessToken="accessToken" :userId="userId" :playlistId="playlist.id"></track-saver> 
-    <track-list :tracks="tracks"></track-list>
+    <track-saver :tracks="tracks" :accessToken="accessToken" :userId="userId" :playlistId="playlist.id"></track-saver>
+    <track-player :accessToken="accessToken" :userId="userId" :track="selectedTrack"></track-player>
+    <track-list :tracks="tracks" v-model="selectedTrack"></track-list>
   </b-container>
 </template>
 
@@ -19,14 +20,17 @@ import BpmSelector from '@/components/BpmSelector'
 import TrackList from '@/components/TrackList'
 import TrackGetter from '@/components/TrackGetter'
 import TrackSaver from '@/components/TrackSaver'
+import TrackPlayer from '@/components/TrackPlayer'
+
 export default {
   name: 'playlist-builder',
-  components: { Multiselect, GenreSelector, PlaylistSelector, BpmSelector, TrackList, TrackGetter, TrackSaver },
+  components: { Multiselect, GenreSelector, PlaylistSelector, BpmSelector, TrackList, TrackGetter, TrackSaver, TrackPlayer },
   data () {
     return {
       msg: 'Welcome to your playlist',
       accessToken: '',
       tracks: [],
+      selectedTrack: {},
       userId: '',
       playlist: {},
       minPopularity: 0,
