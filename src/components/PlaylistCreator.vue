@@ -30,6 +30,10 @@ export default {
         this.createLbl = 'Create'
         this.nameStateDisabled = false
         this.variant = 'info'
+
+        // order important until refactored
+        this.playlistName = ''
+        this.playlistId = ''
       } else {
         this.createPlaylist()
       }

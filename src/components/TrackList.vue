@@ -2,7 +2,7 @@
   <b-container>
     <ul>
         <li v-for="track in tracks" :key="track.id">
-          <span v-html="track.player"></span>
+          <span v-html="track.widgetPlayer"></span>
         </li>
     </ul>
   </b-container>

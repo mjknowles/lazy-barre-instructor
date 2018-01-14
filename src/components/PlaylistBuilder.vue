@@ -1,14 +1,14 @@
 <template>
-  <div class="playlist-builder">
+  <b-container class="playlist-builder">
     <h1>Hello, {{ msg }}!</h1>
     <playlist-selector :accessToken="accessToken" :userId="userId" v-model="playlist"></playlist-selector>
-    <genre-selector :accessToken="accessToken" v-model="selectedGenres"></genre-selector>
-    <bpm-selector :min="tempo.min" :max="tempo.max" v-model="tempo"></bpm-selector>
-    <h2>Enter track ids (comma separated):</h2> <input v-model="selectedTracks" />  
-    <b-button variant="info" v-on:click="getSongs">Get (more) songs</b-button>
-    <b-button variant="success" v-on:click="saveTracksToPlaylist">Save</b-button>
-    <track-list v-bind:tracks="tracks"></track-list>
-  </div>
+    <genre-selector :accessToken="accessToken" v-model="recParams.selectedGenres"></genre-selector>
+    <bpm-selector :min="recParams.tempo.min" :max="recParams.tempo.max" v-model="recParams.tempo"></bpm-selector>
+    <h2>Enter track ids (comma separated):</h2> <input v-model="recParams.selectedTracks" />
+    <track-getter :params="recParams" :accessToken="accessToken" v-model="tracks"></track-getter> 
+    <track-saver :tracks="tracks" :accessToken="accessToken" :userId="userId" :playlistId="playlist.id"></track-saver> 
+    <track-list :tracks="tracks"></track-list>
+  </b-container>
 </template>
 
 <script>
@@ -17,10 +17,11 @@ import GenreSelector from '@/components/GenreSelector'
 import PlaylistSelector from '@/components/PlaylistSelector'
 import BpmSelector from '@/components/BpmSelector'
 import TrackList from '@/components/TrackList'
-
+import TrackGetter from '@/components/TrackGetter'
+import TrackSaver from '@/components/TrackSaver'
 export default {
   name: 'playlist-builder',
-  components: { Multiselect, GenreSelector, PlaylistSelector, BpmSelector, TrackList },
+  components: { Multiselect, GenreSelector, PlaylistSelector, BpmSelector, TrackList, TrackGetter, TrackSaver },
   data () {
     return {
       msg: 'Welcome to your playlist',
@@ -28,48 +29,19 @@ export default {
       tracks: [],
       userId: '',
       playlist: {},
-      selectedGenres: [ 'work-out', 'dance', 'pop' ],
-      selectedTracks: '1TV1Hc5kwk44GPeZEZzydc,77vWEdRG281Z5QJD6I0x7b',
       minPopularity: 0,
       maxPopularity: 100,
       minHappiness: 0,
       maxHappiness: 1,
-      tempo: { min: 120, max: 125 }
+      recParams: {
+        'selectedGenres': [ 'work-out', 'dance', 'pop' ],
+        'selectedTracks': '1TV1Hc5kwk44GPeZEZzydc,77vWEdRG281Z5QJD6I0x7b',
+        'tempo': { min: 120, max: 125 }
+      }
     }
   },
 
   methods: {
-    getSongs () {
-      var vm = this
-      var myParams = {
-        'min_tempo': this.tempo.min,
-        'max_tempo': this.tempo.max,
-        'limit': 10
-      }
-
-      if (this.selectedGenres.length !== 0) myParams['seed_genres'] = this.selectedGenres.join()
-      if (this.selectedTracks.length !== 0) myParams['seed_tracks'] = this.selectedTracks
-
-      this.$http.get('https://api.spotify.com/v1/recommendations',
-        {
-          headers: {
-            'Authorization': 'Bearer ' + this.accessToken
-          },
-          params: myParams
-        }).then((response) => {
-          var tracks = response.body.tracks
-          vm.tracks = tracks.map(function (t) {
-            return {
-              song: t.name,
-              artist: t.artists[0].name,
-              uri: t.uri,
-              player: '<iframe src="https://open.spotify.com/embed?uri=' + t.uri + '"' +
-                'width="250" height="80" frameborder="0" allowtransparency="true"></iframe>"'
-            }
-          })
-        })
-    },
-
     getUrlParameters (location) {
       if (typeof location === 'undefined') {
         location = window.location
@@ -96,19 +68,6 @@ export default {
         }).then((response) => {
           vm.userId = response.body.id
         })
-    },
-
-    saveTracksToPlaylist () {
-      this.$http.post('https://api.spotify.com/v1/users/' + this.userId + '/playlists/' + this.playlist.id + '/tracks',
-      { uris: this.tracks.map(function (t) { return t.uri }) },
-        {
-          headers: {
-            'Authorization': 'Bearer ' + this.accessToken,
-            'content-type': 'application/json'
-          }
-        }).then((response) => {
-          console.log('Tracks saved')
-        })
     }
   },
   created () {
@@ -126,7 +85,7 @@ export default {
     script2.textContent = `
       window.onSpotifyWebPlaybackSDKReady = () => {
         const player = new Spotify.Player({
-          name: 'Web Playback SDK Quick Start Player',
+          name: 'Lazy Barre Instructor',
           getOAuthToken: cb => { cb('` + this.accessToken + `') }
         })
 
