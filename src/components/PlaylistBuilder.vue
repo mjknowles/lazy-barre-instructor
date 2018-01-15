@@ -102,6 +102,7 @@ export default {
 
         player.on('ready', data => {
           let { device_id } = data
+          window.spotifyDeviceId = device_id
           console.log('Ready with Device ID', device_id)
         })
 

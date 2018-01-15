@@ -1,13 +1,13 @@
 <template>
   <b-row>
-    <b-button @click="btnClicked" variant="success">{{playing ? 'Pause' : 'Play'}}</b-button>
+    <b-button @click="playClicked" variant="success">{{playing ? 'Pause' : 'Play'}}</b-button>
   </b-row>
 </template>
 
 <script>
   export default {
     name: 'track-player',
-    props: [ 'accessToken', 'track', 'userId' ],
+    props: [ 'accessToken', 'track' ],
     data () {
       return {
         playing: false
@@ -16,12 +16,29 @@
     watch: {
       'tracks': function () { this.localTracks = this.tracks }
     },
+    initializedAsPlaybackDevice: false,
     methods: {
-      btnClicked () {
-        console.log(this.track.uri)
+      playClicked () {
         if (this.track.uri === '') return
-        this.playing = !this.playing
-        this.$http.put('https://api.spotify.com/v1/me/player/play',
+        if (!this.initializedAsPlaybackDevice) {
+          this.$http.put('https://api.spotify.com/v1/me/player/',
+            { 'device_ids': [ window.spotifyDeviceId ] },
+            {
+              headers: {
+                'Authorization': 'Bearer ' + this.accessToken,
+                'Content-Type': 'application/json'
+              }
+            }).then((response) => {
+              this.initializedAsPlaybackDevice = true
+              this.playOrPause()
+            })
+        } else {
+          this.playOrPause()
+        }
+      },
+
+      playOrPause () {
+        this.$http.put('https://api.spotify.com/v1/me/player/' + (this.playing ? 'pause' : 'play'),
           { 'uris': [ this.track.uri ] },
           {
             headers: {
@@ -30,7 +47,7 @@
               'Content-Type': 'application/json'
             }
           }).then((response) => {
-            console.log('request play')
+            this.playing = !this.playing
           })
       }
     }
