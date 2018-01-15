@@ -9,8 +9,8 @@
         :options="options"
         name="radioBtnOutline" />
     </b-input-group>
-    <playlist-picker v-if="selected == 0" :accessToken="accessToken" v-model="playlist"></playlist-picker>
-    <playlist-creator v-if="selected == 1" :accessToken="accessToken" :userId="userId" v-model="playlist"></playlist-creator>
+    <playlist-creator v-if="selected == 0" :accessToken="accessToken" :userId="userId" v-model="playlist"></playlist-creator>
+    <playlist-picker v-if="selected == 1" :accessToken="accessToken" v-model="playlist"></playlist-picker>
   </b-container>
 </template>
 
@@ -27,8 +27,8 @@ export default {
       playlist: {},
       selected: 0,
       options: [
-        { text: 'Existing', value: '0' },
-        { text: 'New', value: '1' }
+        { text: 'New', value: '0' },
+        { text: 'Existing', value: '1' }
       ]
 
     }

@@ -20,7 +20,7 @@ export default {
       var myParams = {
         'min_tempo': this.params.tempo.min,
         'max_tempo': this.params.tempo.max,
-        'limit': 10
+        'limit': 20
       }
 
       if (this.params.selectedGenres.length !== 0) myParams['seed_genres'] = this.params.selectedGenres.join()
