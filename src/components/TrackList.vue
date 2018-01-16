@@ -1,15 +1,18 @@
 <template>
-  <b-table show-empty hover :items="localTracks" :fields="fields" @row-clicked="trackSelected">
+  <b-table show-empty hover :items="localTracks" :fields="fields" @row-clicked="trackSelected" @row-dblclicked="playTrack">
     <template slot="remove" slot-scope="row">
-      <b-button @click.stop="removeTrack(row.index)" variant="danger">X</b-button>
+      <b-button @click.stop="removeTrack(row.index)" variant="info">{{ removeSymbol }}</b-button>
+      <b-button v-if="allowDelete" @click.stop="deleteTrack(row.index)" variant="danger">X</b-button>
     </template>
   </b-table>
 </template>
 
 <script>
+  import EventBus from '@/event-bus.js'
+  
   export default {
     name: 'track-list',
-    props: [ 'tracks' ],
+    props: [ 'tracks', 'allowDelete', 'removeSymbol' ],
     data () {
       return {
         localTracks: [],
@@ -33,8 +36,14 @@
         this.localTracks[index]._rowVariant = 'info'
         this.$forceUpdate()
       },
-      removeTrack (index) {
+      deleteTrack (index) {
         this.localTracks.splice(index, 1)
+      },
+      removeTrack (index) {
+        this.$emit('trackRemoved', this.localTracks.splice(index, 1)[0])
+      },
+      playTrack (item, index, event) {
+        EventBus.$emit('playTrack')
       }
     }
   }

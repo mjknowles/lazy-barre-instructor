@@ -1,10 +1,12 @@
 <template>
   <b-row>
-    <b-button @click="playClicked" variant="success">{{playing ? 'Pause' : 'Play'}}</b-button>
+    <b-button @click="playTrack" variant="success">{{playing ? 'Pause' : 'Play'}}</b-button>
   </b-row>
 </template>
 
 <script>
+  import EventBus from '@/event-bus.js'
+  
   export default {
     name: 'track-player',
     props: [ 'accessToken', 'track' ],
@@ -16,9 +18,12 @@
     watch: {
       'tracks': function () { this.localTracks = this.tracks }
     },
+    created () {
+      EventBus.$on('playTrack', () => { this.playing = false; this.playTrack })
+    },
     initializedAsPlaybackDevice: false,
     methods: {
-      playClicked () {
+      playTrack () {
         if (this.track.uri === '') return
         if (!this.initializedAsPlaybackDevice) {
           this.$http.put('https://api.spotify.com/v1/me/player/',

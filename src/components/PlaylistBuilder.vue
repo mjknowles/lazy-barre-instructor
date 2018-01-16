@@ -5,15 +5,17 @@
     <genre-selector :accessToken="accessToken" v-model="recParams.selectedGenres"></genre-selector>
     <bpm-selector :min="recParams.tempo.min" :max="recParams.tempo.max" v-model="recParams.tempo"></bpm-selector>
     <h2>Enter track ids (comma separated):</h2> <input v-model="recParams.selectedTracks" />
-    <track-getter :params="recParams" :accessToken="accessToken" v-model="tracks"></track-getter> 
-    <track-saver :tracks="tracks" :accessToken="accessToken" :userId="userId" :playlistId="playlist.id"></track-saver>
+    <track-getter :params="recParams" :accessToken="accessToken" v-model="tracksToConsider"></track-getter> 
+    <track-saver :tracks="tracksToSave" :accessToken="accessToken" :userId="userId" :playlistId="playlist.id"></track-saver>
     <track-player :accessToken="accessToken" :userId="userId" :track="selectedTrack"></track-player>
-    <track-list :tracks="tracks" v-model="selectedTrack"></track-list>
+    <b-row>
+      <b-col><track-list @trackRemoved="addToTracksToSave" :tracks="tracksToConsider" v-model="selectedTrack" :removeSymbol="'>'" :allowDelete="true"></track-list></b-col>
+      <b-col><track-list @trackRemoved="addToTracksToConsider" :tracks="tracksToSave" v-model="selectedTrack" :removeSymbol="'<'"></track-list></b-col>
+    </b-row>
   </b-container>
 </template>
 
 <script>
-import Multiselect from 'vue-multiselect'
 import GenreSelector from '@/components/GenreSelector'
 import PlaylistSelector from '@/components/PlaylistSelector'
 import BpmSelector from '@/components/BpmSelector'
@@ -24,12 +26,13 @@ import TrackPlayer from '@/components/TrackPlayer'
 
 export default {
   name: 'playlist-builder',
-  components: { Multiselect, GenreSelector, PlaylistSelector, BpmSelector, TrackList, TrackGetter, TrackSaver, TrackPlayer },
+  components: { GenreSelector, PlaylistSelector, BpmSelector, TrackList, TrackGetter, TrackSaver, TrackPlayer },
   data () {
     return {
       msg: 'Welcome to your playlist',
       accessToken: '',
-      tracks: [],
+      tracksToConsider: [],
+      tracksToSave: [],
       selectedTrack: {},
       userId: '',
       playlist: {},
@@ -72,6 +75,14 @@ export default {
         }).then((response) => {
           vm.userId = response.body.id
         })
+    },
+
+    addToTracksToSave (track) {
+      this.tracksToSave.push(track)
+    },
+
+    addToTracksToConsider (track) {
+      this.tracksToConsider.push(track)
     }
   },
   created () {
