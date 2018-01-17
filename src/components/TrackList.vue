@@ -26,6 +26,7 @@
       'index': function () {
         this.selectedTrack = this.tracks[this.index]
         this.$emit('input', this.selectedTrack)
+        EventBus.$emit('selectTrack', this.selectedTrack)
       },
       'localTracks': function () { this.$emit('tracks', this.localTracks) }
     },
@@ -43,7 +44,7 @@
         this.$emit('trackRemoved', this.localTracks.splice(index, 1)[0])
       },
       playTrack (item, index, event) {
-        EventBus.$emit('playTrack')
+        EventBus.$emit('playTrack', this.selectedTrack)
       }
     }
   }

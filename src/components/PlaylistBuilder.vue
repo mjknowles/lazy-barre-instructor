@@ -7,10 +7,10 @@
     <h2>Enter track ids (comma separated):</h2> <input v-model="recParams.selectedTracks" />
     <track-getter :params="recParams" :accessToken="accessToken" v-model="tracksToConsider"></track-getter> 
     <track-saver :tracks="tracksToSave" :accessToken="accessToken" :userId="userId" :playlistId="playlist.id"></track-saver>
-    <track-player :accessToken="accessToken" :userId="userId" :track="selectedTrack"></track-player>
+    <track-player :accessToken="accessToken" :userId="userId"></track-player>
     <b-row>
-      <b-col><track-list @trackRemoved="addToTracksToSave" :tracks="tracksToConsider" v-model="selectedTrack" :removeSymbol="'>'" :allowDelete="true"></track-list></b-col>
-      <b-col><track-list @trackRemoved="addToTracksToConsider" :tracks="tracksToSave" v-model="selectedTrack" :removeSymbol="'<'"></track-list></b-col>
+      <b-col><track-list @trackRemoved="addToTracksToSave" :tracks="tracksToConsider" :removeSymbol="'>'" :allowDelete="true"></track-list></b-col>
+      <b-col><track-list @trackRemoved="addToTracksToConsider" :tracks="tracksToSave" :removeSymbol="'<'"></track-list></b-col>
     </b-row>
   </b-container>
 </template>
@@ -33,7 +33,6 @@ export default {
       accessToken: '',
       tracksToConsider: [],
       tracksToSave: [],
-      selectedTrack: {},
       userId: '',
       playlist: {},
       minPopularity: 0,

@@ -9,9 +9,10 @@
   
   export default {
     name: 'track-player',
-    props: [ 'accessToken', 'track' ],
+    props: [ 'accessToken' ],
     data () {
       return {
+        track: { },
         playing: false
       }
     },
@@ -19,12 +20,19 @@
       'tracks': function () { this.localTracks = this.tracks }
     },
     created () {
-      EventBus.$on('playTrack', () => { this.playing = false; this.playTrack })
+      EventBus.$on('selectTrack', (track) => {
+        if (!this.initializedAsPlaybackDevice) this.track = track
+      })
+      EventBus.$on('playTrack', (track) => {
+        this.playing = false
+        this.track = track
+        this.playTrack()
+      })
     },
     initializedAsPlaybackDevice: false,
     methods: {
       playTrack () {
-        if (this.track.uri === '') return
+        if (Object.keys(this.track).length === 0 || this.track.uri === '') return
         if (!this.initializedAsPlaybackDevice) {
           this.$http.put('https://api.spotify.com/v1/me/player/',
             { 'device_ids': [ window.spotifyDeviceId ] },
