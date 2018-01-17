@@ -40,6 +40,7 @@ export default {
               song: t.name,
               artist: t.artists[0].name,
               uri: t.uri,
+              durationMs: t.duration_ms,
               widgetPlayer: '<iframe src="https://open.spotify.com/embed?uri=' + t.uri + '"' +
                 'width="250" height="80" frameborder="0" allowtransparency="true"></iframe>"'
             }

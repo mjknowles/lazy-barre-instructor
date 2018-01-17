@@ -7,7 +7,10 @@
     <h2>Enter track ids (comma separated):</h2> <input v-model="recParams.selectedTracks" />
     <track-getter :params="recParams" :accessToken="accessToken" v-model="tracksToConsider"></track-getter> 
     <track-saver :tracks="tracksToSave" :accessToken="accessToken" :userId="userId" :playlistId="playlist.id"></track-saver>
-    <track-player :accessToken="accessToken" :userId="userId"></track-player>
+    <b-row>
+      <b-col><track-player :accessToken="accessToken"></track-player></b-col>
+      <b-col><track-seeker :accessToken="accessToken"></track-seeker></b-col>
+    </b-row>
     <b-row>
       <b-col><track-list @trackRemoved="addToTracksToSave" :tracks="tracksToConsider" :removeSymbol="'>'" :allowDelete="true"></track-list></b-col>
       <b-col><track-list @trackRemoved="addToTracksToConsider" :tracks="tracksToSave" :removeSymbol="'<'"></track-list></b-col>
@@ -23,10 +26,11 @@ import TrackList from '@/components/TrackList'
 import TrackGetter from '@/components/TrackGetter'
 import TrackSaver from '@/components/TrackSaver'
 import TrackPlayer from '@/components/TrackPlayer'
+import TrackSeeker from '@/components/TrackSeeker'
 
 export default {
   name: 'playlist-builder',
-  components: { GenreSelector, PlaylistSelector, BpmSelector, TrackList, TrackGetter, TrackSaver, TrackPlayer },
+  components: { GenreSelector, PlaylistSelector, BpmSelector, TrackList, TrackGetter, TrackSaver, TrackPlayer, TrackSeeker },
   data () {
     return {
       msg: 'Welcome to your playlist',

@@ -13,7 +13,8 @@
     data () {
       return {
         track: { },
-        playing: false
+        playing: false,
+        trackInProgress: false
       }
     },
     watch: {
@@ -24,7 +25,9 @@
         if (!this.initializedAsPlaybackDevice) this.track = track
       })
       EventBus.$on('playTrack', (track) => {
+        this.offset = 0
         this.playing = false
+        this.trackInProgress = false
         this.track = track
         this.playTrack()
       })
@@ -52,7 +55,7 @@
 
       playOrPause () {
         this.$http.put('https://api.spotify.com/v1/me/player/' + (this.playing ? 'pause' : 'play'),
-          { 'uris': [ this.track.uri ] },
+          { 'uris': this.trackInProgress ? [] : [ this.track.uri ] },
           {
             headers: {
               'Authorization': 'Bearer ' + this.accessToken,
@@ -60,6 +63,7 @@
               'Content-Type': 'application/json'
             }
           }).then((response) => {
+            if (!this.trackInProgress) this.trackInProgress = true
             this.playing = !this.playing
           })
       }
