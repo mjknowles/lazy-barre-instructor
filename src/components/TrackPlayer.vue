@@ -55,14 +55,15 @@
 
       playOrPause () {
         this.$http.put('https://api.spotify.com/v1/me/player/' + (this.playing ? 'pause' : 'play'),
-          { 'uris': this.trackInProgress ? [] : [ this.track.uri ] },
+          this.trackInProgress ? {} : { 'uris': [ this.track.uri ] },
+          // { 'uris': [ this.track.uri ] },
           {
             headers: {
               'Authorization': 'Bearer ' + this.accessToken,
               'Accept': 'application/json',
               'Content-Type': 'application/json'
             }
-          }).then((response) => {
+          }).then((response, err) => {
             if (!this.trackInProgress) this.trackInProgress = true
             this.playing = !this.playing
           })
