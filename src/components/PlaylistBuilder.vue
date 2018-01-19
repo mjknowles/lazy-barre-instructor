@@ -101,6 +101,7 @@ export default {
     var script2 = document.createElement('script')
     script2.type = 'text/javascript'
     script2.textContent = `
+      window.spotifyPlayerState = {}
       window.onSpotifyWebPlaybackSDKReady = () => {
         const player = new Spotify.Player({
           name: 'Lazy Barre Instructor',
@@ -112,7 +113,10 @@ export default {
         player.on('account_error', e => { console.error(e) })
         player.on('playback_error', e => { console.error(e) })
 
-        player.on('player_state_changed', state => { console.log(state) })
+        player.on('player_state_changed', state => { 
+          window.spotifyPlayerState = state
+          console.log(window.spotifyPlayerState) 
+        })
 
         player.on('ready', data => {
           let { device_id } = data

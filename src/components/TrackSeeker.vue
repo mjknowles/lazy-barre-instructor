@@ -1,5 +1,5 @@
 <template>
-  <b-form-input :max="trackDuration" value="positionMs" :id="`type-range`" type="range"></b-form-input>
+  <b-form-input @change="positionChanged" :max="trackDuration" v-model="positionMs" :id="`type-range`" type="range"></b-form-input>
 </template>
 
 <script>
@@ -21,16 +21,17 @@
         this.trackDuration = track.durationMs
       })
     },
-    watch: {
-      'positionMs': function () {
-        this.$emit(['input', 'seekTrack'], this.positionMs)
-        this.$http.put('https://api.spotify.com/v1/me/player/',
-          { 'position_ms': this.positionMs },
+    methods: {
+      positionChanged () {
+        this.$emit('input', this.positionMs)
+        this.$emit('seekTrack', this.positionMs)
+        this.$http.put('https://api.spotify.com/v1/me/player/seek',
+          { },
           {
             headers: {
-              'Authorization': 'Bearer ' + this.accessToken,
-              'Content-Type': 'application/json'
-            }
+              'Authorization': 'Bearer ' + this.accessToken
+            },
+            params: { 'position_ms': this.positionMs }
           })
       }
     }
