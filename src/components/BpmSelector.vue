@@ -22,17 +22,12 @@ export default {
   data () {
     return {
       minBpm: 0,
-      maxBpm: 1000,
-      options: [
-        { text: 'Existing', value: '0' },
-        { text: 'New', value: '1' }
-      ]
-
+      maxBpm: 1000
     }
   },
   watch: {
-    'min': function () { this.buildBpm() },
-    'max': function () { this.buildBpm() }
+    'minBpm': function () { this.$emit('input', this.buildBpm()) },
+    'maxBpm': function () { this.$emit('input', this.buildBpm()) }
   },
   methods: {
     buildBpm () {
