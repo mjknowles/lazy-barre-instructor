@@ -32,7 +32,8 @@ npm run deploy
 
 For detailed explanation on how things work, checkout the [guide](http://vuejs-templates.github.io/webpack/) and [docs for vue-loader](http://vuejs.github.io/vue-loader).
 
-Pull down docker build image:
+Build image locally:
+docker build -t lazy-barre-instructor .
 
-Run the docker image:
+Run the docker build image:
 docker run -v C:\Users\Michael\Documents\vsts:/vsts-token -v /var/run/docker.sock:/var/run/docker.sock -e VSTS_AGENT='$(hostname)-docker-build-agent' -e VSTS_ACCOUNT=mjknowles -e VSTS_TOKEN_FILE=/vsts-token/token.txt -it microsoft/vsts-agent:ubuntu-16.04-docker-17.12.0-ce-standard
