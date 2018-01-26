@@ -1,6 +1,5 @@
 <template>
-  <b-input-group>
-    <b-input-group-addon>Name</b-input-group-addon>
+  <b-input-group prepend="Name">
     <b-form-input v-model="playlistName" :disabled="nameStateDisabled" placeholder="enter playlist name" />
     <b-input-group-button slot="right">    
       <b-btn v-on:click="btnClick" v-bind:variant="variant" v-text="createLbl"></b-btn>
