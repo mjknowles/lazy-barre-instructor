@@ -23,8 +23,8 @@ export default {
         'limit': 10
       }
 
-      if (this.params.selectedGenres.length !== 0) myParams['seed_genres'] = this.params.selectedGenres.join()
-      if (this.params.selectedTracks.length !== 0) myParams['seed_tracks'] = this.params.selectedTracks
+      if (this.params.selectedGenres && this.params.selectedGenres.length !== 0) myParams['seed_genres'] = this.params.selectedGenres.join()
+      if (this.params.selectedTracks && this.params.selectedTracks.length !== 0) myParams['seed_tracks'] = this.params.selectedTracks
 
       this.$http.get('https://api.spotify.com/v1/recommendations',
         {

@@ -1,8 +1,10 @@
 <template>
   <b-table show-empty hover :items="localTracks" :fields="fields" @row-clicked="trackSelected" @row-dblclicked="playTrack">
+    <template slot="delete" slot-scope="row">
+      <b-button v-if="!disAllowDelete" @click.stop="deleteTrack(row.index)" variant="danger">X</b-button>
+    </template>
     <template slot="remove" slot-scope="row">
       <b-button @click.stop="removeTrack(row.index)" variant="info">{{ removeSymbol }}</b-button>
-      <b-button v-if="allowDelete" @click.stop="deleteTrack(row.index)" variant="danger">X</b-button>
     </template>
   </b-table>
 </template>
@@ -12,11 +14,11 @@
   
   export default {
     name: 'track-list',
-    props: [ 'tracks', 'allowDelete', 'removeSymbol' ],
+    props: [ 'tracks', 'disAllowDelete', 'removeSymbol' ],
     data () {
       return {
         localTracks: [],
-        fields: [ { key: 'remove', label: ' ' }, 'song', 'artist' ],
+        fields: [ { key: 'delete', label: ' ' }, { key: 'remove', label: ' ' }, 'song', 'artist' ],
         index: -1,
         selectedTrack: {}
       }

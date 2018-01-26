@@ -4,15 +4,15 @@
     <playlist-selector :accessToken="accessToken" :userId="userId" v-model="playlist"></playlist-selector>
     <genre-selector :accessToken="accessToken" v-model="recParams.selectedGenres"></genre-selector>
     <bpm-selector :min="recParams.tempo.min" :max="recParams.tempo.max" v-model="recParams.tempo"></bpm-selector>
-    <h2>Enter track ids (comma separated):</h2> <input v-model="recParams.selectedTracks" />
-    <track-getter :params="recParams" :accessToken="accessToken" v-model="tracksToConsider"></track-getter> 
-    <track-saver :tracks="tracksToSave" :accessToken="accessToken" :userId="userId" :playlistId="playlist.id"></track-saver>
+    <track-seed-selector v-model="recParams.selectedTracks"> </track-seed-selector>
     <b-row>
       <b-col><track-player :accessToken="accessToken"></track-player></b-col>
       <b-col><track-seeker :accessToken="accessToken"></track-seeker></b-col>
+      <b-col><track-getter :params="recParams" :accessToken="accessToken" v-model="tracksToConsider"></track-getter> </b-col>
+      <b-col><track-saver :tracks="tracksToSave" :accessToken="accessToken" :userId="userId" :playlistId="playlist.id"></track-saver></b-col>
     </b-row>
     <b-row>
-      <b-col><track-list @trackRemoved="addToTracksToSave" :tracks="tracksToConsider" :removeSymbol="'>'" :allowDelete="true"></track-list></b-col>
+      <b-col><track-list @trackRemoved="addToTracksToSave" :tracks="tracksToConsider" :removeSymbol="'>'"></track-list></b-col>
       <b-col><track-list @trackRemoved="addToTracksToConsider" :tracks="tracksToSave" :removeSymbol="'<'"></track-list></b-col>
     </b-row>
   </b-container>
@@ -27,10 +27,11 @@ import TrackGetter from '@/components/TrackGetter'
 import TrackSaver from '@/components/TrackSaver'
 import TrackPlayer from '@/components/TrackPlayer'
 import TrackSeeker from '@/components/TrackSeeker'
+import TrackSeedSelector from '@/components/TrackSeedSelector'
 
 export default {
   name: 'playlist-builder',
-  components: { GenreSelector, PlaylistSelector, BpmSelector, TrackList, TrackGetter, TrackSaver, TrackPlayer, TrackSeeker },
+  components: { GenreSelector, PlaylistSelector, BpmSelector, TrackList, TrackGetter, TrackSaver, TrackPlayer, TrackSeeker, TrackSeedSelector },
   data () {
     return {
       msg: 'Welcome to your playlist',
@@ -45,7 +46,7 @@ export default {
       maxHappiness: 1,
       recParams: {
         'selectedGenres': [ 'work-out', 'dance', 'pop' ],
-        'selectedTracks': '1TV1Hc5kwk44GPeZEZzydc,77vWEdRG281Z5QJD6I0x7b',
+        'selectedTracks': '',
         'tempo': { min: 120, max: 125 }
       }
     }
