@@ -1,7 +1,14 @@
 <template>
   <b-container class="playlist-builder">
     <h1>Hello, {{ msg }}!</h1>
-    <playlist-selector :accessToken="accessToken" :userId="userId" v-model="playlist"></playlist-selector>
+    <b-row>
+      First, select a playlist to create or add to:
+    </b-row>
+     <playlist-selector :accessToken="accessToken" :userId="userId" v-model="playlistToBuild"></playlist-selector>
+    <br/>
+    <b-row>(Optional) Select a playlist you would like to mimic:</b-row>
+    <playlist-picker :accessToken="accessToken" v-model="playlistToMimic"></playlist-picker>
+    <b-row>Select playlist attributes:</b-row>
     <genre-selector :accessToken="accessToken" v-model="recParams.selectedGenres"></genre-selector>
     <bpm-selector :min="recParams.tempo.min" :max="recParams.tempo.max" v-model="recParams.tempo"></bpm-selector>
     <track-seed-selector v-model="recParams.selectedTracks"> </track-seed-selector>
@@ -9,7 +16,7 @@
       <b-col><track-player :accessToken="accessToken"></track-player></b-col>
       <b-col><track-seeker :accessToken="accessToken"></track-seeker></b-col>
       <b-col><track-getter :params="recParams" :accessToken="accessToken" v-model="tracksToConsider"></track-getter> </b-col>
-      <b-col><track-saver :tracks="tracksToSave" :accessToken="accessToken" :userId="userId" :playlistId="playlist.id"></track-saver></b-col>
+      <b-col><track-saver :tracks="tracksToSave" :accessToken="accessToken" :userId="userId" :playlistId="playlistToBuild.id"></track-saver></b-col>
     </b-row>
     <b-row>
       <b-col><track-list @trackRemoved="addToTracksToSave" :tracks="tracksToConsider" :removeSymbol="'>'"></track-list></b-col>
@@ -28,18 +35,31 @@ import TrackSaver from '@/components/TrackSaver'
 import TrackPlayer from '@/components/TrackPlayer'
 import TrackSeeker from '@/components/TrackSeeker'
 import TrackSeedSelector from '@/components/TrackSeedSelector'
+import PlaylistPicker from '@/components/PlaylistPicker'
 
 export default {
   name: 'playlist-builder',
-  components: { GenreSelector, PlaylistSelector, BpmSelector, TrackList, TrackGetter, TrackSaver, TrackPlayer, TrackSeeker, TrackSeedSelector },
+  components: {
+    GenreSelector,
+    PlaylistSelector,
+    BpmSelector,
+    TrackList,
+    TrackGetter,
+    TrackSaver,
+    TrackPlayer,
+    TrackSeeker,
+    TrackSeedSelector,
+    PlaylistPicker
+  },
   data () {
     return {
-      msg: 'Welcome to your playlist',
+      msg: 'Welcome to your playlist builder',
       accessToken: '',
       tracksToConsider: [],
       tracksToSave: [],
       userId: '',
-      playlist: {},
+      playlistToBuild: {},
+      playlistToMimic: {},
       minPopularity: 0,
       maxPopularity: 100,
       minHappiness: 0,
