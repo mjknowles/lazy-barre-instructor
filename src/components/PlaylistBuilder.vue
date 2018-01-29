@@ -8,12 +8,18 @@
     <br/>
     <b-row>(Optional) Select a playlist you would like to mimic:</b-row>
     <playlist-picker :accessToken="accessToken" v-model="playlistToAnalyze"></playlist-picker>
-    <b-row>Select playlist attributes:</b-row>
+    <track-seed-selector v-model="recParams.selectedTracks"> </track-seed-selector>
     <genre-selector :accessToken="accessToken" v-model="recParams.selectedGenres"></genre-selector>
+    <br/>
+    <b-row><b>Select playlist attributes:</b></b-row>
+    <b-row class="my-1">
+      <b-col sm="6"><b>Minimums</b></b-col>
+      <b-col sm="6"><b>Maximums</b></b-col>
+    </b-row>
     <template v-for="attrib in recParams.tuneableAttribs">
       <tuneable-attrib-setter :attribLbl="attrib.lbl" :min="attrib.values.min" :max="attrib.values.max" v-model="attrib.values" :key="`${attrib.key}_setter`"></tuneable-attrib-setter>
     </template>
-    <track-seed-selector v-model="recParams.selectedTracks"> </track-seed-selector>
+    <br/>
     <b-row>
       <b-col><track-player :accessToken="accessToken"></track-player></b-col>
       <b-col><track-seeker :accessToken="accessToken"></track-seeker></b-col>
@@ -71,7 +77,15 @@ export default {
         'selectedTracks': '',
         tuneableAttribs: [
           { key: 'tempo', lbl: 'BPM', values: { min: 120, max: 125 } },
-          { key: 'danceability', lbl: 'Danceability', values: { min: 0.0, max: 1.0 } }
+          { key: 'acousticness', lbl: 'Acousticness', values: { min: 0.0, max: 1.0 } },
+          { key: 'danceability', lbl: 'Danceability', values: { min: 0.0, max: 1.0 } },
+          { key: 'energy', lbl: 'Energy', values: { min: 0.0, max: 1.0 } },
+          { key: 'instrumentalness', lbl: 'Instrumentalness', values: { min: 0.0, max: 1.0 } },
+          { key: 'liveness', lbl: 'Liveness', values: { min: 0.0, max: 1.0 } },
+          { key: 'loudness', lbl: 'Loudness', values: { min: -60, max: 0 } },
+          { key: 'popularity', lbl: 'Popularity', values: { min: 0, max: 100 } },
+          { key: 'speechiness', lbl: 'Speechiness', values: { min: 0, max: 1 } },
+          { key: 'valence', lbl: 'Valence', values: { min: 0, max: 1 } }
         ]
       }
     }

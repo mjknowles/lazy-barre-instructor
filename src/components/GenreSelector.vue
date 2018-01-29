@@ -1,10 +1,15 @@
 <template>
   <b-container>
-      <multiselect 
-        v-model="selectedGenres" 
-        :options="genres"
-        :multiple="true">
-      </multiselect>
+    <b-row class="my-1">
+      <b-col sm="2"><label for="input-default">Select genres:</label></b-col>
+      <b-col sm="10">
+        <multiselect 
+          v-model="selectedGenres" 
+          :options="genres"
+          :multiple="true">
+        </multiselect>
+      </b-col>
+    </b-row>
   </b-container>
 </template>
 

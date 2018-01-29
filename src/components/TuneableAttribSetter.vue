@@ -1,13 +1,12 @@
 <template>
   <b-container>
     <b-row class="my-1">
-      <b-col sm="2"><label for="input-default">Min {{attribLbl}}:</label></b-col>
-      <b-col sm="4">
-        <b-form-input id="input-default" type="text" placeholder="Min BPM" v-model="minBpm"></b-form-input>
+      <b-col sm="2"><label for="input-default">{{attribLbl}}:</label></b-col>
+      <b-col sm="5">
+        <b-form-input id="input-default" type="text" placeholder="Min" v-model="minVal"></b-form-input>
       </b-col>
-      <b-col sm="2"><label for="input-default">Max {{attribLbl}}:</label></b-col>
-      <b-col sm="4">
-        <b-form-input id="input-default" type="text" placeholder="Max BPM" v-model="maxBpm"></b-form-input>
+      <b-col sm="5">
+        <b-form-input id="input-default" type="text" placeholder="Max" v-model="maxVal"></b-form-input>
       </b-col>
     </b-row>
   </b-container>
@@ -19,22 +18,22 @@ export default {
   props: [ 'min', 'max', 'attribLbl' ],
   data () {
     return {
-      minBpm: 0,
-      maxBpm: 1000
+      minVal: 0,
+      maxVal: 1000
     }
   },
   watch: {
-    'minBpm': function () { this.$emit('input', this.buildValues()) },
-    'maxBpm': function () { this.$emit('input', this.buildValues()) }
+    'minVal': function () { this.$emit('input', this.buildValues()) },
+    'maxVal': function () { this.$emit('input', this.buildValues()) }
   },
   methods: {
     buildValues () {
-      return { 'min': this.minBpm, 'max': this.maxBpm }
+      return { 'min': this.minVal, 'max': this.maxVal }
     }
   },
   created () {
-    if (this.min && this.min !== 0) this.minBpm = this.min
-    if (this.max && this.max !== 0) this.maxBpm = this.max
+    if (this.min && this.min !== 0) this.minVal = this.min
+    if (this.max && this.max !== 0) this.maxVal = this.max
   }
 }
 </script>

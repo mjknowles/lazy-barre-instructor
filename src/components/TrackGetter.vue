@@ -17,13 +17,17 @@ export default {
   methods: {
     getSongs () {
       var vm = this
-      var myParams = {
-        'min_tempo': this.params.tuneableAttribs.filter(function (attrib) { return attrib.key === 'tempo' })[0].values.min,
-        'max_tempo': this.params.tuneableAttribs.filter(function (attrib) { return attrib.key === 'tempo' })[0].values.max,
-        'min_danceability': this.params.tuneableAttribs.filter(function (attrib) { return attrib.key === 'danceability' })[0].values.min,
-        'max_danceability': this.params.tuneableAttribs.filter(function (attrib) { return attrib.key === 'danceability' })[0].values.max,
-        'limit': 10
-      }
+      var myParams = { 'limit': 100 }
+      this.params.tuneableAttribs.map(function (attrib) {
+        var attribParam = {}
+        attribParam['min_' + attrib.key] = attrib.values.min
+        attribParam['max_' + attrib.key] = attrib.values.max
+        return attribParam
+      }).forEach(attrib => {
+        Object.keys(attrib).forEach(key => {
+          myParams[key] = attrib[key]
+        })
+      })
 
       if (this.params.selectedGenres && this.params.selectedGenres.length !== 0) myParams['seed_genres'] = this.params.selectedGenres.join()
       if (this.params.selectedTracks && this.params.selectedTracks.length !== 0) myParams['seed_tracks'] = this.params.selectedTracks

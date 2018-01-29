@@ -1,7 +1,7 @@
 <template>
   <b-container>
     <b-row class="my-1">
-      <b-col sm="2"><label for="input-default">Track Ids:</label></b-col>
+      <b-col sm="2"><label for="input-default">Enter track Ids:</label></b-col>
       <b-col sm="10">
         <b-form-input id="input-default" type="text" placeholder="comma separated" v-model="enteredTracks"></b-form-input>
       </b-col>
