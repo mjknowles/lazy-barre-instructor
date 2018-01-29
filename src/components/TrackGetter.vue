@@ -18,8 +18,10 @@ export default {
     getSongs () {
       var vm = this
       var myParams = {
-        'min_tempo': this.params.tempo.min,
-        'max_tempo': this.params.tempo.max,
+        'min_tempo': this.params.tuneableAttribs.filter(function (attrib) { return attrib.key === 'tempo' })[0].values.min,
+        'max_tempo': this.params.tuneableAttribs.filter(function (attrib) { return attrib.key === 'tempo' })[0].values.max,
+        'min_danceability': this.params.tuneableAttribs.filter(function (attrib) { return attrib.key === 'danceability' })[0].values.min,
+        'max_danceability': this.params.tuneableAttribs.filter(function (attrib) { return attrib.key === 'danceability' })[0].values.max,
         'limit': 10
       }
 

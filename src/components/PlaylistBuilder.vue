@@ -7,10 +7,12 @@
      <playlist-selector :accessToken="accessToken" :userId="userId" v-model="playlistToBuild"></playlist-selector>
     <br/>
     <b-row>(Optional) Select a playlist you would like to mimic:</b-row>
-    <playlist-picker :accessToken="accessToken" v-model="playlistToMimic"></playlist-picker>
+    <playlist-picker :accessToken="accessToken" v-model="playlistToAnalyze"></playlist-picker>
     <b-row>Select playlist attributes:</b-row>
     <genre-selector :accessToken="accessToken" v-model="recParams.selectedGenres"></genre-selector>
-    <bpm-selector :min="recParams.tempo.min" :max="recParams.tempo.max" v-model="recParams.tempo"></bpm-selector>
+    <template v-for="attrib in recParams.tuneableAttribs">
+      <tuneable-attrib-setter :attribLbl="attrib.lbl" :min="attrib.values.min" :max="attrib.values.max" v-model="attrib.values" :key="`${attrib.key}_setter`"></tuneable-attrib-setter>
+    </template>
     <track-seed-selector v-model="recParams.selectedTracks"> </track-seed-selector>
     <b-row>
       <b-col><track-player :accessToken="accessToken"></track-player></b-col>
@@ -28,7 +30,7 @@
 <script>
 import GenreSelector from '@/components/GenreSelector'
 import PlaylistSelector from '@/components/PlaylistSelector'
-import BpmSelector from '@/components/BpmSelector'
+import TuneableAttribSetter from '@/components/TuneableAttribSetter'
 import TrackList from '@/components/TrackList'
 import TrackGetter from '@/components/TrackGetter'
 import TrackSaver from '@/components/TrackSaver'
@@ -42,7 +44,7 @@ export default {
   components: {
     GenreSelector,
     PlaylistSelector,
-    BpmSelector,
+    TuneableAttribSetter,
     TrackList,
     TrackGetter,
     TrackSaver,
@@ -59,7 +61,7 @@ export default {
       tracksToSave: [],
       userId: '',
       playlistToBuild: {},
-      playlistToMimic: {},
+      playlistToAnalyze: {},
       minPopularity: 0,
       maxPopularity: 100,
       minHappiness: 0,
@@ -67,7 +69,10 @@ export default {
       recParams: {
         'selectedGenres': [ 'work-out', 'dance', 'pop' ],
         'selectedTracks': '',
-        'tempo': { min: 120, max: 125 }
+        tuneableAttribs: [
+          { key: 'tempo', lbl: 'BPM', values: { min: 120, max: 125 } },
+          { key: 'danceability', lbl: 'Danceability', values: { min: 0.0, max: 1.0 } }
+        ]
       }
     }
   },
