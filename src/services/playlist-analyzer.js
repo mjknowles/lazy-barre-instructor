@@ -1,7 +1,7 @@
-/*"use strict"
+"use strict"
 
 var PlaylistAnalyzer = {
 
 };
 
-module.exports = PlaylistAnalyzer;*/
+module.exports = PlaylistAnalyzer;

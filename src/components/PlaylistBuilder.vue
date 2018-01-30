@@ -6,11 +6,11 @@
     </b-row>
      <playlist-selector :accessToken="accessToken" :userId="userId" v-model="playlistToBuild"></playlist-selector>
     <br/>
+    <genre-selector :accessToken="accessToken" v-model="recParams.selectedGenres"></genre-selector>
+    <track-seed-selector v-model="recParams.selectedTracks"> </track-seed-selector>
+    <br/>
     <b-row>(Optional) Select a playlist you would like to mimic:</b-row>
     <playlist-picker :accessToken="accessToken" v-model="playlistToAnalyze"></playlist-picker>
-    <track-seed-selector v-model="recParams.selectedTracks"> </track-seed-selector>
-    <genre-selector :accessToken="accessToken" v-model="recParams.selectedGenres"></genre-selector>
-    <br/>
     <b-row><b>Select playlist attributes:</b></b-row>
     <b-row class="my-1">
       <b-col sm="6"><b>Minimums</b></b-col>
@@ -44,6 +44,7 @@ import TrackPlayer from '@/components/TrackPlayer'
 import TrackSeeker from '@/components/TrackSeeker'
 import TrackSeedSelector from '@/components/TrackSeedSelector'
 import PlaylistPicker from '@/components/PlaylistPicker'
+import SpotifyService from '@/services/spotify-service'
 
 export default {
   name: 'playlist-builder',
@@ -90,7 +91,9 @@ export default {
       }
     }
   },
-
+  watch: {
+    'playlistToAnalyze': function () { SpotifyService.getTracksFromPlaylist(this.playlistToAnalyze.id, this.userId, this.accessToken) }
+  },
   methods: {
     getUrlParameters (location) {
       if (typeof location === 'undefined') {
