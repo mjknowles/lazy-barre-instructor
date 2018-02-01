@@ -44,7 +44,7 @@ import TrackPlayer from '@/components/TrackPlayer'
 import TrackSeeker from '@/components/TrackSeeker'
 import TrackSeedSelector from '@/components/TrackSeedSelector'
 import PlaylistPicker from '@/components/PlaylistPicker'
-import SpotifyService from '@/services/spotify-service'
+import PlaylistAnalyzer from '@/services/playlist-analyzer'
 
 export default {
   name: 'playlist-builder',
@@ -69,10 +69,6 @@ export default {
       userId: '',
       playlistToBuild: {},
       playlistToAnalyze: {},
-      minPopularity: 0,
-      maxPopularity: 100,
-      minHappiness: 0,
-      maxHappiness: 1,
       recParams: {
         'selectedGenres': [ 'work-out', 'dance', 'pop' ],
         'selectedTracks': '',
@@ -92,7 +88,16 @@ export default {
     }
   },
   watch: {
-    'playlistToAnalyze': function () { SpotifyService.getTracksFromPlaylist(this.playlistToAnalyze.id, this.userId, this.accessToken) }
+    'playlistToAnalyze': function () {
+      PlaylistAnalyzer.getMinMaxFeatures(this.playlistToAnalyze.id, this.userId,
+      this.accessToken).then(features =>
+        features.forEach(feature => {
+          var attrib = this.recParams.tuneableAttribs.find(attrib => Object.keys(feature).includes(attrib.key))
+          attrib.values.min = feature[attrib.key].min
+          attrib.values.max = feature[attrib.key].max
+        })
+      )
+    }
   },
   methods: {
     getUrlParameters (location) {
