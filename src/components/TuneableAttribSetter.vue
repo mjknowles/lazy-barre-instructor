@@ -15,7 +15,7 @@
 <script>
 export default {
   name: 'tuneable-attrib-setter',
-  props: [ 'min', 'max', 'attribLbl' ],
+  props: [ 'value', 'attribLbl' ],
   data () {
     return {
       minVal: 0,
@@ -24,16 +24,20 @@ export default {
   },
   watch: {
     'minVal': function () { this.$emit('input', this.buildValues()) },
-    'maxVal': function () { this.$emit('input', this.buildValues()) }
+    'maxVal': function () { this.$emit('input', this.buildValues()) },
+    'value': function () { this.setValues() }
   },
   methods: {
     buildValues () {
       return { 'min': this.minVal, 'max': this.maxVal }
+    },
+    setValues () {
+      if (this.value.min && this.value.min !== 0) this.minVal = this.value.min
+      if (this.value.max && this.value.max !== 0) this.maxVal = this.value.max
     }
   },
   created () {
-    if (this.min && this.min !== 0) this.minVal = this.min
-    if (this.max && this.max !== 0) this.maxVal = this.max
+    this.setValues()
   }
 }
 </script>

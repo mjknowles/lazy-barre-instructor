@@ -17,7 +17,7 @@
       <b-col sm="6"><b>Maximums</b></b-col>
     </b-row>
     <template v-for="attrib in recParams.tuneableAttribs">
-      <tuneable-attrib-setter :attribLbl="attrib.lbl" :min="attrib.values.min" :max="attrib.values.max" v-model="attrib.values" :key="`${attrib.key}_setter`"></tuneable-attrib-setter>
+      <tuneable-attrib-setter :attribLbl="attrib.lbl" v-model="attrib.values" :key="`${attrib.key}_setter`"></tuneable-attrib-setter>
     </template>
     <br/>
     <b-row>
@@ -93,8 +93,7 @@ export default {
       this.accessToken).then(features =>
         features.forEach(feature => {
           var attrib = this.recParams.tuneableAttribs.find(attrib => Object.keys(feature).includes(attrib.key))
-          attrib.values.min = feature[attrib.key].min
-          attrib.values.max = feature[attrib.key].max
+          attrib.values = feature[attrib.key]
         })
       )
     }

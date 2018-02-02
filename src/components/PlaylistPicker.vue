@@ -5,7 +5,7 @@
 <script>
 export default {
   name: 'playlist-picker',
-  props: [ 'accessToken' ],
+  props: [ 'accessToken', 'initializeSelected' ],
   data () {
     return {
       playlistId: '',
@@ -49,7 +49,7 @@ export default {
     var vm = this
     this.getPlaylists().then((playlists) => {
       vm.playlists = playlists
-      if (vm.playlists.length > 0) {
+      if (vm.playlists.length > 0 && this.initializeSelected) {
         vm.playlistId = vm.playlists[0].value
       }
     })
