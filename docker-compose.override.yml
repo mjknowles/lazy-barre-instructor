@@ -5,4 +5,10 @@ services:
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
     ports:
-      - "80"
+      - "32771:80"
+    volumes:
+      - C:\Users\Michael\AppData\Roaming\Microsoft\UserSecrets:/root/.microsoft/usersecrets/
+  lbi.web:
+    image: mjknowles/lazy-barre-instructor:20
+    ports:
+      - "32770:80"

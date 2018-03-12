@@ -3,9 +3,9 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
 VisualStudioVersion = 15.0.27130.2036
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Identity.API", "src\Services\Identity.API\Identity.API.csproj", "{32F72462-D32F-47FA-878B-352992F03200}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Identity.API", "src\Services\Identity.API\Identity.API.csproj", "{32F72462-D32F-47FA-878B-352992F03200}"
 EndProject
-Project("{E53339B2-1760-4266-BCC7-CA923CBCF16C}") = "docker-compose", "docker-compose.dcproj", "{3D3C5016-B5BF-4FFA-B1AC-D3D451C209C7}"
+Project("{E53339B2-1760-4266-BCC7-CA923CBCF16C}") = "docker-compose", "docker-compose.dcproj", "{8C7B3FEA-EF41-41A8-BCAB-FC324747C939}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -17,10 +17,10 @@ Global
 		{32F72462-D32F-47FA-878B-352992F03200}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{32F72462-D32F-47FA-878B-352992F03200}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{32F72462-D32F-47FA-878B-352992F03200}.Release|Any CPU.Build.0 = Release|Any CPU
-		{3D3C5016-B5BF-4FFA-B1AC-D3D451C209C7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{3D3C5016-B5BF-4FFA-B1AC-D3D451C209C7}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{3D3C5016-B5BF-4FFA-B1AC-D3D451C209C7}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{3D3C5016-B5BF-4FFA-B1AC-D3D451C209C7}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8C7B3FEA-EF41-41A8-BCAB-FC324747C939}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8C7B3FEA-EF41-41A8-BCAB-FC324747C939}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8C7B3FEA-EF41-41A8-BCAB-FC324747C939}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8C7B3FEA-EF41-41A8-BCAB-FC324747C939}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
